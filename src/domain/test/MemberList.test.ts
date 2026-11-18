@@ -34,4 +34,20 @@ describe("MemberList", () => {
     list.add(member);
     expect(list.totalFees()).toBe(1500);
   });
+
+  test("update the fee of a member", () => {
+    list.add(member);
+    list.updateFee("12345678", 2000);
+    expect(member.monthlyFee).toBe(2000);
+  });
+
+  test("reject updating the fee of a non-existent member", () => {
+    expect(() => list.updateFee("99999999", 2000)).toThrow();
+  });
+
+  test("total discounted", () => {
+    member.discount = 10;
+    list.add(member);
+    expect(list.totalDiscounted()).toBe(1350);
+  });
 });
