@@ -11,6 +11,7 @@ const inpDocument = document.getElementById(
 ) as HTMLInputElement | null;
 const selPlan = document.getElementById("sel-plan") as HTMLSelectElement | null;
 const inpFee = document.getElementById("inp-fee") as HTMLInputElement | null;
+// Parte B.4: campo nuevo "Descuento (%)" del formulario "Nuevo socio".
 const inpDiscount = document.getElementById(
   "inp-discount",
 ) as HTMLInputElement | null;
@@ -36,10 +37,12 @@ const inpTotalMembers = document.getElementById(
 const inpTotalFees = document.getElementById(
   "inp-total-fees",
 ) as HTMLInputElement | null;
+// Parte B.4: total nuevo "Total con descuento" del panel "Inicio".
 const inpTotalDiscount = document.getElementById(
   "inp-total-discount",
 ) as HTMLInputElement | null;
 
+// Vacía el formulario después de agregar un socio (ahora incluye el descuento).
 function clearInputs(): void {
   if (inpName && inpDocument && inpFee && inpDiscount) {
     inpName.value = "";
@@ -79,6 +82,12 @@ function createFeeEditor(member: Member): HTMLDivElement {
   button.type = "button";
   button.className = "btn btn-outline-secondary";
   button.textContent = "Guardar cuota";
+  // Parte B.6: al hacer click en "Guardar cuota" se cambia la cuota del socio
+  // con el valor del input y se redibujan el listado y los totales.
+  // Si la cuota es inválida, updateFee lanza Error y en el catch se agrega
+  // la clase de Bootstrap "is-invalid", que pone el campo en rojo.
+  // No hace falta sacar "is-invalid" al guardar bien: updateList() vuelve a
+  // crear todas las cards, así que el input nuevo ya viene sin esa clase.
   button.addEventListener("click", () => {
     try {
       memberList.updateFee(member.documentId, Number(input.value));
@@ -102,6 +111,8 @@ function createCard(member: Member): HTMLDivElement {
   const title = document.createElement("h5");
   title.className = "card-title";
   title.textContent = member.name;
+  // Parte B.5: el plan se muestra como badge de Bootstrap al lado del nombre
+  // (ya no como una línea de texto de la card). ms-2 = margen a la izquierda.
   const badge = document.createElement("span");
   badge.className = "badge text-bg-primary ms-2";
   badge.textContent = PLAN_LABELS[member.plan];
@@ -110,6 +121,7 @@ function createCard(member: Member): HTMLDivElement {
     `Documento: ${member.documentId}`,
     `Cuota mensual: $${member.monthlyFee}`,
   ];
+  // El descuento solo aparece en la card si es mayor que 0.
   if (member.discount > 0) {
     lines.push(`Descuento: ${member.discount}%`);
   }
@@ -131,6 +143,8 @@ function updateList(): void {
   }
 }
 
+// Actualiza los totales del panel "Inicio", incluido el nuevo
+// "Total con descuento" (memberList.totalDiscounted()).
 function updateTotals(): void {
   if (inpTotalMembers && inpTotalFees && inpTotalDiscount) {
     inpTotalMembers.value = String(memberList.getItems().length);
@@ -139,6 +153,9 @@ function updateTotals(): void {
   }
 }
 
+// Carga los socios de ejemplo de members.json. Algunos tienen "discount" y
+// otros no, por eso el tipo agrega "discount?" (opcional) y se usa
+// "?? 0": si no viene en el JSON, el descuento queda en 0.
 function loadMockData(): void {
   for (const data of mockMembers as (MemberData & { discount?: number })[]) {
     const member = new Member(data);
@@ -160,6 +177,8 @@ if (btnAdd && inpName && inpDocument && selPlan && inpFee && inpDiscount) {
         plan: selPlan.value as Plan,
         monthlyFee: Number(inpFee.value),
       });
+      // Si el campo de descuento queda vacío, el descuento es 0 (lo pide la
+      // letra). Si no, se convierte a número y el setter lo valida (0 a 100).
       member.discount =
         inpDiscount.value === "" ? 0 : Number(inpDiscount.value);
       memberList.add(member);

@@ -56,10 +56,14 @@ describe("Member", () => {
     );
   });
 
+  // --- Parte A.1: tests del descuento ---
+
+  // Como beforeEach no asigna descuento, tiene que valer 0.
   test("discount is 0 by default", () => {
     expect(member.discount).toBe(0);
   });
 
+  // Casos de error: menor que 0, mayor que 100 y con decimales.
   test("reject a negative discount", () => {
     expect(() => (member.discount = -1)).toThrow();
   });
@@ -72,6 +76,8 @@ describe("Member", () => {
     expect(() => (member.discount = 2.5)).toThrow();
   });
 
+  // Con descuento > 0 el texto agrega "- Descuento: 10%" al final.
+  // (El caso sin descuento lo cubre "show the member as text".)
   test("show the discount in the text when it is greater than 0", () => {
     member.discount = 10;
     expect(member.toString()).toBe(

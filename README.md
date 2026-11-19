@@ -33,6 +33,19 @@ Subir un issue 'Parte A' con screenshot de la terminal con el resumen de tests y
 
 Subir un issue 'Parte B' con screenshot de la página (paneles Inicio y Socios).
 
+### Comandos npm para verificar todo
+
+Correr desde la carpeta del proyecto (`int-gym` o `int-bikes`):
+
+```bash
+npm install       # instala las dependencias (solo la primera vez o si falta node_modules)
+npm test          # corre los tests con cobertura: tiene que dar 100 % en Stmts y Branch
+npm run lint      # corre ESLint (y corrige lo que puede): no tiene que mostrar errores ni warnings
+npm run format    # formatea el código de src/ con Prettier
+npm run build     # chequea tipos con TypeScript (tsc) y arma dist/: no tiene que dar errores
+npm run dev       # levanta la página en http://localhost:5173 para probarla y sacar screenshots
+```
+
 ### Referencias y recursos útiles
 
 - [ESLint](https://eslint.org/docs/latest/rules/)

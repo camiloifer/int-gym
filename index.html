@@ -92,6 +92,8 @@
                 readonly
               />
             </div>
+            <!-- Parte B.4: total nuevo "Total con descuento".
+                 main.ts lo llena con memberList.totalDiscounted(). -->
             <div class="stat">
               <label class="form-label" for="inp-total-discount"
                 >Total con descuento</label
@@ -144,6 +146,8 @@
               <label class="form-label" for="inp-fee">Cuota mensual</label>
               <input class="form-control" id="inp-fee" type="number" min="0" />
             </div>
+            <!-- Parte B.4: campo nuevo "Descuento (%)", entero de 0 a 100.
+                 Si se deja vacío, main.ts usa 0. -->
             <div class="col-md-6">
               <label class="form-label" for="inp-discount">Descuento (%)</label>
               <input
